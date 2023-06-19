@@ -30,20 +30,29 @@ def firing_alert(request):
     """
     Firing alert to line notification with message payload.
     """
+    msg = ""
+    name = "Name"
+    icon = "XXX"
+    status = "Unknown"
+    severity = "severrity"
+    description = "description"
     if request.json['status'] == 'firing':
-        icon = "⛔⛔⛔ 😡 ⛔⛔⛔"
-        status = "Firing"
-        time = reformat_datetime(request.json['alerts'][0]['startsAt'])
+        status = "[FIRING]"
+        icon = "⚠️"
+        #time = reformat_datetime(request.json['alerts'][0]['startsAt'])
     else:
-        icon = "🔷🔷🔷 😎 🔷🔷🔷"
-        status = "Resolved"
-        time = str(datetime.now().date()) + ' ' + str(datetime.now().time().strftime('%H:%M:%S'))
+        status = "[RESOLVED]"
+        icon = "👍"
+        #time = str(datetime.now().date()) + ' ' + str(datetime.now().time().strftime('%H:%M:%S'))
     header = {'Authorization':request.headers['AUTHORIZATION']}
     for alert in request.json['alerts']:
-        msg = "Alertmanger: " + icon + "\nStatus: " + status + "\nSeverity: " + alert['labels']['severity'] + "\nTime: " + time + "\nSummary: " + alert['annotations']['summary'] + "\nDescription: " + alert['annotations']['description']
+        name = alert['labels']['alertname']
+        severity = alert['labels']['severity']
+        description = alert['annotations']['description']
+
+        msg = "\n" + status + icon + name + "\nSeverity: " + severity + "\nDescription: " + description
         msg = {'message': msg}
         response = requests.post(LINE_NOTIFY_URL, headers=header, data=msg)
-
 
 @app.route('/')
 def index():
@@ -79,14 +88,6 @@ def logs():
     file = open(LOG_PATH, 'r+')
     content = file.read()
     return render_template('logs.html', text=content, name='logs')
-
-
-@app.route('/metrics')
-def metrics():
-    """
-    Expose metrics for monitoring tools.
-    """
-
 
 if __name__ == "__main__":
     manage_logs.init_log(LOG_PATH)
