@@ -21,7 +21,7 @@ Using docker to run the program
 Run commands below to clone source code that need to have to run program with docker compose.
 
 ```bash
-git clone <link>
+git clone https://github.com/phurits/line-notify-gateway.git
 cd line-notify-gateway
 docker compose up -d
 ```
@@ -34,7 +34,7 @@ This is how to run this program manually without using docker.
 
 Run commands below to install tools that need to have to run the program.
 ```bash
-git clone <link>
+git clone https://github.com/phurits/line-notify-gateway.git
 cd line-notify-gateway
 pip install -r requirements.txt
 python app.py
