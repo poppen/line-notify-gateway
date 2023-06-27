@@ -49,6 +49,7 @@ receivers:
   - name: 'line'
     webhook_configs:
       - url: 'http://localhost:5000/webhook'
+        send_resolved: true
         http_config:
           bearer_token: '« YOUR_LINE_API_TOKEN »'
 ```
